@@ -173,6 +173,10 @@ class Deidentify() {
     attributes
   }
 
+  def execute(attributes: Sequence[Attributes]): Sequence[Attributes] = {
+    attributes.map(this.execute _)
+  }
+
   private def deidentify(att: Attributes, dsf: DateShiftPAF, tsf: TimeShiftPAF): Unit = {
 
     att.tags foreach {
