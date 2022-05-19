@@ -20,7 +20,7 @@ din.close()
 Deidentify()
   .keep(Tag.PatientSex, Tag.PatientSize, Tag.PatientWeight)
   .withOptions(RetainLongModifDatesOption)
-  .execute(att)
+  .execute([fmi, att])
 
 // write to new DICOM file
 val dout = new DicomOutputStream(new File("de-identified.dcm"))
