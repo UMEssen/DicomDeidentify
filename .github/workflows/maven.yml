@@ -1,49 +1,21 @@
-name: CICD
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
-on: [push]
+name: Java CI with Maven
+
+on: [push, pull_request]
 
 jobs:
-
   build:
-    strategy:
-      matrix:
-        scala_version: ["2.12", "2.13"]
-    
     runs-on: ubuntu-latest
 
-    env:
-      SCALA_VERSION: ${{ matrix.scala_version }}
-
     steps:
-    - uses: actions/checkout@v1
-
-    - name: checkout-submodules
-      uses: srt32/git-actions@v0.0.3
-      with:
-        args: git submodule update --init --recursive
-
-    - uses: actions/setup-python@v1
-      with:
-        python-version: '3.x'
-        architecture: 'x64'
-    - run: pip3 install -r dicom_codify/requirements.txt
-
-    - name: Build dicom_codify
-      run: cd dicom_codify && invoke di --fname="../src/main/resources/deidentify.json"
-
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-
-    - name: Run surefire
-      run: mvn -B test
-    
-    - name: Release Maven package
-      if: github.ref == 'refs/heads/master'
-      uses: samuelmeuli/action-maven-publish@v1
-      with:
-        gpg_private_key: ${{ secrets.gpg_private_key }}
-        gpg_passphrase: ${{ secrets.gpg_passphrase }}
-        nexus_username: ${{ secrets.nexus_username }}
-        nexus_password: ${{ secrets.nexus_password }}
+      - uses: actions/checkout@v2
+      - name: Set up JDK 13
+        uses: actions/setup-java@v2
+        with:
+          java-version: "13"
+          distribution: "adopt"
+          cache: maven
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
