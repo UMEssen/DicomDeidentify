@@ -1,4 +1,4 @@
-CI/CD Status: [![Build Status](https://github.com/luckfamousa/DicomDeidentify/workflows/CICD/badge.svg)](https://github.com/luckfamousa/DicomDeidentify/actions?query=workflow%3ACICD)
+CI/CD Status: [![Build Status](https://github.com/UMEssen/DicomDeidentify/actions/workflows/maven.yml/badge.svg)](https://github.com/UMEssen/DicomDeidentify/actions/workflows/maven.yml)
 
 # DICOM De-Identify
 
