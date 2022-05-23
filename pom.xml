@@ -87,15 +87,17 @@
       <name>GitHub UMEssen Apache Maven Packages</name>
       <url>https://maven.pkg.github.com/UMEssen/DicomDeidentify</url>
     </repository>
-    <!-- Central Repository -->
+    <!-- GitHub Repository -->
     <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <id>github</id>
+      <name>GitHub UMEssen Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/UMEssen/DicomDeidentify</url>
     </snapshotRepository>
   </distributionManagement>
 
   <build>
     <sourceDirectory>src/main/scala</sourceDirectory>
+
     <testSourceDirectory>src/test/scala</testSourceDirectory>
     <plugins>
       <plugin>
