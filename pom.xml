@@ -84,8 +84,8 @@
     <!-- GitHub Packages  -->
     <repository>
       <id>github</id>
-      <name>GitHub luckfamousa Apache Maven Packages</name>
-      <url>https://maven.pkg.github.com/luckfamousa/DicomDeidentify</url>
+      <name>GitHub UMEssen Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/UMEssen/DicomDeidentify</url>
     </repository>
     <!-- Central Repository -->
     <snapshotRepository>
