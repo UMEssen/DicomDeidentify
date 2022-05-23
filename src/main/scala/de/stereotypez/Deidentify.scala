@@ -173,7 +173,7 @@ class Deidentify() {
     attributes
   }
 
-  def execute(attributes: Sequence[Attributes]): Sequence[Attributes] = {
+  def execute(attributes: Seq[Attributes]): Seq[Attributes] = {
     attributes.map(this.execute _)
   }
 
