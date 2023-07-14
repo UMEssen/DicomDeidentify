@@ -111,7 +111,8 @@ class Deidentify() {
     true
   }
   private var _ucleanFunction: CleaningFunction = (att, tag, dsf, tsf) => {
-    att.setString(tag, att.getVR(tag), UIDUtils.createNameBasedUID(att.getBytes(tag)))
+    // Some uid tags may be terminated by a nullbyte and some are not. Sanitize it with getString.
+    att.setString(tag, att.getVR(tag), UIDUtils.createNameBasedUID(att.getString(tag).getBytes))
     true
   }
   private var _kcleanFunction: CleaningFunction = (att, tag, dsf, tsf) => {
