@@ -1,6 +1,7 @@
-CI/CD Status: [![Build Status](https://github.com/UMEssen/DicomDeidentify/actions/workflows/maven.yml/badge.svg)](https://github.com/UMEssen/DicomDeidentify/actions/workflows/maven.yml)
-
 # DICOM De-Identify
+
+[![Build Status](https://github.com/UMEssen/DicomDeidentify/actions/workflows/maven.yml/badge.svg)](https://github.com/UMEssen/DicomDeidentify/actions/workflows/maven.yml)  
+[![Affiliated with RTG WisPerMed](https://img.shields.io/badge/Affiliated-RTG%202535%20WisPerMed-blue)](https://wispermed.org/)
 
 A small and configurable Scala library to de-identify DICOM files according to http://dicom.nema.org/medical/dicom/current/output/html/part15.html#table_E.1-1.
 
