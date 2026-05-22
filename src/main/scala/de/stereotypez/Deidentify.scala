@@ -188,28 +188,53 @@ class Deidentify() {
       // apply special handlers and skip if one returns true
       case tag if _specialHandlers.exists(_(att, tag, dsf, tsf)) => ()
 
-      // recurse over sequences
+      // sequences: honor the resolved action code for the sequence itself
+      // (previously every sequence was unconditionally recursed into, so a sequence
+      //  that the profile requires to be removed/emptied was instead kept and only its
+      //  known children scrubbed — leaving unknown PHI in e.g. private sequences)
       case tag if VR.SQ == att.getVR(tag) =>
-        att.getSequence(tag) forEach { seqatt =>
-          deidentify(seqatt, dsf, tsf)
+        deidentifiers.find(_.matches(tag)).map(resolveCode) match {
+          // X family -> remove the whole sequence
+          case Some(code) if isRemoveCode(code) =>
+            att.remove(tag)
+          // Z/D family -> replace with a zero-length (empty) sequence
+          case Some(code) if isEmptyCode(code) =>
+            att.remove(tag)
+            att.ensureSequence(tag, 0)
+          // K (cleaned for sequences), C, U, or no matching rule -> recurse and clean contents
+          case _ =>
+            att.getSequence(tag) forEach { seqatt =>
+              deidentify(seqatt, dsf, tsf)
+            }
         }
 
-      // apply DICOM Supp. 142 logic
+      // apply DICOM Supp. 142 logic to non-sequence attributes
       case tag =>
         deidentifiers.find(_.matches(tag)) map { d =>
-          // foldLeft through profiles
-          val code: ActionCode = _profileOptions.foldLeft(Option.empty[ActionCode]) { (a, b) =>
-            b.apply(d) match {
-              case Some(code) => Some(code)
-              case _ => a
-            }
-          } getOrElse {BasicProfile(d).get}
-
-          // apply the respective cleaning function
-          _cleaningFunctions(code)(att, tag, dsf, tsf)
+          _cleaningFunctions(resolveCode(d))(att, tag, dsf, tsf)
         }
     }
 
+  }
+
+  // foldLeft through the configured profile options (later wins), falling back to the
+  // basic profile, exactly as before — extracted so the sequence and non-sequence arms share it.
+  private def resolveCode(d: Deidentifier): ActionCode =
+    _profileOptions.foldLeft(Option.empty[ActionCode]) { (a, b) =>
+      b.apply(d) match {
+        case Some(code) => Some(code)
+        case _ => a
+      }
+    } getOrElse { BasicProfile(d).get }
+
+  private def isRemoveCode(code: ActionCode): Boolean = code match {
+    case `X` | `X/Z` | `X/D` | `X/Z/D` | `X/Z/U*` => true
+    case _ => false
+  }
+
+  private def isEmptyCode(code: ActionCode): Boolean = code match {
+    case `Z` | `D` | `Z/D` => true
+    case _ => false
   }
 }
 
